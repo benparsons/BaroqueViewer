@@ -1,34 +1,47 @@
 <html>
 <head>
+<style>
+td {
+  border: solid 1px black;
+}
+</style>
 <script
   src="https://code.jquery.com/jquery-3.2.1.min.js"
   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
   crossorigin="anonymous"></script>
 <script>
-var monarches_url = "http://baroque.bpulse.co.uk/index.php?title=Special:Ask/format%3Djson/link%3Dall/sort%3DAscended/order%3DASC/headers%3Dshow/searchlabel%3DJSON/class%3Dsortable-20wikitable-20smwtable/offset%3D/limit%3D50/-5B-5BCategory:English-20Monarchs-5D-5D/-3FAscended/-3FDescended/mainlabel%3D/prettyprint%3Dtrue/unescape%3Dtrue";
-var monarches;
+var monarchs_url = "http://baroque.bpulse.co.uk/index.php?title=Special:Ask/format%3Djson/link%3Dall/sort%3DAscended/order%3DASC/headers%3Dshow/searchlabel%3DJSON/class%3Dsortable-20wikitable-20smwtable/offset%3D/limit%3D50/-5B-5BCategory:English-20Monarchs-5D-5D/-3FAscended/-3FDescended/mainlabel%3D/prettyprint%3Dtrue/unescape%3Dtrue";
+var monarchs;
 $(document).ready(function() {
-  $.getJSON(monarches_url, function(data)
+  $.getJSON(monarchs_url, function(data)
   {
     console.log(data);
-    monarches = data.results;
+    monarchs = data.results;
     renderTable();
   });
 });
-// var date = new Date(parseInt(monarches["Charles I"].printouts["Ascended"][0].timestamp, 10) * 1000)
+// var date = new Date(parseInt(monarchs["Charles I"].printouts["Ascended"][0].timestamp, 10) * 1000)
 
 
 function renderTable() {
   var ascention_years = [];
-  for (name in monarches) {
-    ascention_years[new Date(parseInt(monarches[name].printouts["Ascended"][0].timestamp, 10) * 1000).getFullYear()] = name;
+  for (name in monarchs) {
+    try {
+      var ascention_year = new Date(parseInt(monarchs[name].printouts["Ascended"][0].timestamp, 10) * 1000).getFullYear();
+      var descention_year = new Date(parseInt(monarchs[name].printouts["Descended"][0].timestamp, 10) * 1000).getFullYear();
+      ascention_years[ascention_year] = {name: name, reign: descention_year - ascention_year};
+    } catch(e) {
+      console.log(e);
+    }
   }
   console.log(ascention_years);
   for (var year = 1620; year < 1720; year++) {
     var row = $("<tr>");
     row.append($("<td>").text(year));
     if (ascention_years[year]) {
-      row.append($("<td>").text(ascention_years[year]));
+      var monarch_block = $("<td>").text(ascention_years[year].name);
+      monarch_block.attr('rowspan', ascention_years[year].reign)
+      row.append(monarch_block);
     }
     $("#years_table").append(row);
   }
