@@ -1,3 +1,5 @@
+var CELL_HEIGHT = 18;
+
 $(document).ready(function() {
   renderDateLabels();
 });
@@ -30,4 +32,13 @@ function renderDateLabels() {
 
 function yearClick(yearLabel) {
   $(yearLabel.target).siblings(".month_list").toggle();
+}
+
+function getMonthTopPosition(year, month) {
+  if ($("#y" + year + "m" + month).is(":visible")) {
+    return $("#y" + year + "m" + month).position().top;
+  }
+  else {
+    return $("#y" + year).position().top;
+  }
 }
