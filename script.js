@@ -6,6 +6,7 @@ function renderDateLabels() {
   for (var year = 1620; year < 1720; year++) {
     var year_block = $("<div class='year_block' id='y" + year + "'>");
     var year_label = $("<div class='year_label'>").text(year);
+    year_label.click(function (a) { yearClick(a); });
     var month_list = $("<div class='month_list'>");
     month_list.append($("<div id='y" + year + "m1'>January</div>"));
     month_list.append($("<div id='y" + year + "m2'>February</div>"));
@@ -25,4 +26,8 @@ function renderDateLabels() {
 
     $("#timeline").append(year_block);
   }
+}
+
+function yearClick(yearLabel) {
+  $(yearLabel.target).siblings(".month_list").toggle();
 }
