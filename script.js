@@ -51,6 +51,7 @@ function getMonarchData() {
 
 function renderMonarchRanges() {
   $(".monarch_div").remove();
+  var left = 150;
   for (var i in monarchs) {
     var ascended_year = monarchs[i].Ascended.getFullYear();
     var ascended_month = monarchs[i].Ascended.getMonth() + 1;
@@ -63,8 +64,10 @@ function renderMonarchRanges() {
     var monarch_div = $("<div>").text(i);
     monarch_div.css('top', startPosition);
     monarch_div.css('height', endPosition - startPosition);
+    monarch_div.css('left', left);
     monarch_div.addClass('monarch_div');
     $("#timeline").append(monarch_div);
+    left += 50;
   }
 }
 
